@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,19 +43,19 @@ class _MainPageState extends State<MainPage> {
     dbConnections = [
       {
         'connectionName': 'Product Sales',
-        'dbType': 'postgres',
+        'dbType': 'PostgreSQL',
         'keywords': ['Finance', 'Business', 'Sales'],
         'createdAt': "09/23/2023"
       },
       {
         'connectionName': 'Customer Info',
-        'dbType': 'mongo',
+        'dbType': 'MongoDB',
         'keywords': ['Users', 'Record Keeping'],
         'createdAt': '10/15/2023'
       },
       {
         'connectionName': 'Employee Expenses',
-        'dbType': 'postgres',
+        'dbType': 'PostgreSQL',
         'keywords': ['Finances', 'Management', 'People Ops'],
         'createdAt': '11/20/2023'
       },
@@ -391,13 +392,14 @@ class _DBCardState extends State<DBCard> {
   @override
   Widget build(BuildContext context) {
     var imagePath;
-    if (widget.dbInfo['dbType'] == 'postgres') {
+    if (widget.dbInfo['dbType'] == 'PostgreSQL') {
       imagePath = 'assets/images/postgres.jpg';
-    } else if (widget.dbInfo['dbType'] == 'mongo') {
+    } else if (widget.dbInfo['dbType'] == 'MongoDB') {
       imagePath = 'assets/images/mongo.png';
     }
 
-    Color backgroundColor = isHovered ? const Color.fromARGB(255, 82, 82, 82) : const Color.fromARGB(255, 72, 72, 72); // Lighter color when hovered
+    Color backgroundColor = isHovered ? const Color.fromARGB(255, 82, 82, 82) : const Color.fromARGB(255, 56, 56, 56);
+    Color miniContainerColor = isHovered ? const Color.fromARGB(255, 93, 93, 93) : const Color.fromARGB(255, 72, 72, 72);
 
     return MouseRegion(
       onEnter: (_) => setState(() => isHovered = true),
@@ -420,8 +422,65 @@ class _DBCardState extends State<DBCard> {
                   backgroundImage: AssetImage(imagePath),
                   radius: 30
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 26),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.dbInfo['connectionName'],
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18
+                      )
+                    ),
+                    Text(
+                      widget.dbInfo['dbType'],
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 13
+                      )
+                    )
+                  ],
+                )
+              ),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "Created at ${widget.dbInfo['createdAt']}",
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 13
+                      )
+                    ),
+                    const Spacer(),
+                    Row(
+                      children: widget.dbInfo['keywords'].map<Widget>((keyword) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                          margin: const EdgeInsets.symmetric(horizontal: 2),
+                          decoration: BoxDecoration(
+                            color: miniContainerColor,
+                            borderRadius: BorderRadius.circular(30)
+                          ),
+                          child: Text(
+                            keyword,
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 10
+                            )
+                          )
+                        );
+                      }).toList()
+                    )
+                  ], 
+                )
               )
-
             ]
           )
         ),
